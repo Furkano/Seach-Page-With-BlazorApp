@@ -71,7 +71,7 @@ namespace Search_Psge_Test
             var result = await elasticBookServiceMock.Object.GetAllBookNoFilteredAsync(1, 10);
 
             result.Books.Count.Should().Be(bookDtoMock.Object.Books.Count);
-            result.Total.Should().Be(bookDtoMock.Object.Total);
+            result.Total.Should().Be(bookDtoMock.Object.Total); 
         }
         [Test]
         public async Task GetAllBookNoFilteredAsync_ShouldThrowException_WhenElasticSearchResponseHasServerError()
