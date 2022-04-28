@@ -1,0 +1,61 @@
+﻿@using Newtonsoft.Json
+@using Core.Data.Dto
+@using Core.IServices
+@inject IElasticBookService _elasticBookService
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <EditForm class="input-group" style="margin-top: 5%;" Model="SearchText">
+                <InputText type="search" class="form-control" placeholder="Search Front" aria-label="Search Book"
+                           Value="@SearchText" ValueChanged="FindSearchedText" ValueExpression="()=>SearchText"></InputText>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary">Search</button>
+                </div>
+            </EditForm>
+            <div style="background-color: aliceblue;">
+                @if (BookIdNameDtos is not null)
+                {
+                    foreach (var idName in BookIdNameDtos)
+                    {
+                        <div class="col-md-12">
+                            <a class="btn btn-link btn-soft-secondary rounded" href="#">
+                                @StringToHtml(@idName.Name)
+                            </a>
+                        </div>
+
+
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public string SearchText = "";
+    public List<BookIdNameDto> BookIdNameDtos { get; set; } = new();
+
+    private async Task FindSearchedText(string text)
+    {
+        SearchText = text;
+        Console.WriteLine("SearchText=>{0}", SearchText);
+        if (SearchText.Length >= 3)
+        {
+            BookIdNameDtos = await _elasticBookService.GetWithSearchBarFilterText(SearchText);
+            Console.WriteLine("BookIdNameDtos:=>{0}", JsonConvert.SerializeObject(BookIdNameDtos));
+            Console.WriteLine("searchText SearchText=>{0}", SearchText);
+        }
+
+    }
+    RenderFragment StringToHtml(string htmlString)
+    {
+        return new RenderFragment(b => b.AddMarkupContent(0, htmlString));
+    }
+}

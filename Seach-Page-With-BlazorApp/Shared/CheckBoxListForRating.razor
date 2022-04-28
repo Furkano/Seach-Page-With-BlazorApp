@@ -1,0 +1,78 @@
+﻿@typeparam TItem
+<div style=@Style>
+    @if (Data != null)
+    {
+        foreach (var item in Data)
+        {
+            var Text = StarField is not null ? StarField.Invoke(item) : 0;
+            var Value = CountField is not null ? CountField.Invoke(item) : 0;
+            bool Checked = false;
+            if (SelectedValues is not null && SelectedValues.Contains(Text))
+            {
+                Checked = true;
+            }
+
+            @*<input type="checkbox" checked=@Checked
+                       @onchange="eventArgs => { CheckboxClicked(Value, eventArgs.Value); }" />
+                @Text*@
+            <div class="form-group d-flex align-items-center justify-content-between font-size-1 text-lh-lg text-body mb-1">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="rating@(Text.ToString())" checked=@Checked
+                           @onchange="eventArgs => { CheckboxClicked(Text, eventArgs.Value ?? false); }">
+                    <label class="custom-control-label" for="rating@(Text.ToString())">
+                        <span class="d-block text-warning">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Text)
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star text-muted"></i>
+                                }
+                            }
+                        </span>
+                    </label>
+                </div>
+                <small>@Value</small>
+            </div>
+        }
+    }
+    @ChildContent
+</div>
+
+@code {
+    //Data for the Checkbox
+    [Parameter] public IEnumerable<TItem>? Data { get; set; }
+    // The field to be shown adjacent to checkbox
+    [Parameter] public Func<TItem, int>? StarField { get; set; }
+    // The Value which checkbox will return when checked
+    [Parameter] public Func<TItem, object>? CountField { get; set; }
+    // CSS Style for the Checkbox container
+    [Parameter] public string? Style { get; set; }
+    // Any childd content for the control (if needed)
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    // The array which contains the list of selected checkboxs
+    [Parameter] public List<int>? SelectedValues { get; set; }
+
+    //Method to update the selected value on click on checkbox
+    public void CheckboxClicked(int aSelectedId, object aChecked)
+    {
+        if ((bool)aChecked)
+        {
+            if (SelectedValues is not null && !SelectedValues.Contains(aSelectedId))
+            {
+                SelectedValues.Add(aSelectedId);
+            }
+        }
+        else
+        {
+            if (SelectedValues is not null && SelectedValues.Contains(aSelectedId))
+            {
+                SelectedValues.Remove(aSelectedId);
+            }
+        }
+        StateHasChanged();
+    }
+}  

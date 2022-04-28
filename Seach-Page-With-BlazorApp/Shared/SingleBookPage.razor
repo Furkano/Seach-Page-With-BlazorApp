@@ -1,0 +1,87 @@
+﻿<ul class="list-unstyled">
+    <!-- Products -->
+    @if(@OneBook is not null)
+    {
+        <li class="card card-bordered shadow-none mb-3 mb-md-5">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img class="card-img" src="@OneBook.ThumbnailUrl" alt="Image Description">
+            </div>
+
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="mb-2">
+                        <label class="d-inline-block text-body small font-weight-bold mb-1"><strong>Başlık:</strong>  @OneBook?.Title</label>
+                        <span class="d-block font-size-1">
+                            <label class="text-inherit"><strong>Kategori:</strong>  @OneBook?.Categories </label>
+                        </span>
+                        <div class="d-block">
+                            <span class="h5">$@OneBook?.Price</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="text-warning mr-1">
+                            @OneBook?.ShortDescription
+                        </div>
+
+                        <div class="d-block">
+                            <span class="h5">Yazar: @OneBook?.Author.Name</span>
+                        </div>
+                        <div class="d-block">
+                            <span class="h5">@OneBook?.PageCount Sayfa</span>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6" style="padding-top:2%;">
+                            <div class="form-group d-flex align-items-center justify-content font-size-1 text-lh-lg text-body mb-0">
+                                <div class="custom-control" style="padding-left: 8%; padding-right: 25% ">
+                                    <span class="d-block text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= OneBook?.Stars)
+                                            {
+                                                <i class="fas fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star text-muted"></i>
+                                            }
+                                        }
+                                    </span>
+                                </div>
+                                <small>@OneBook?.Stars</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-sm btn-soft-secondary btn-pill transition-3d-hover no-click">
+                                @OneBook?.LikeCount <i class="far fa-heart mr-1"></i> Beğeni
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:5%;">
+                        <div class="form-group col-md-6">
+                            <label> <strong>Country:</strong> </label>
+                            <span>@OneBook.Author.Address.Country</span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label> <strong>City:</strong> </label>
+                            <span>@OneBook.Author.Address.City</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+    }
+    
+    <!-- End Products -->
+</ul>
+@using Core.Data
+@code {
+
+    [Parameter]
+    public Book OneBook { get; set; }
+}
